@@ -1,0 +1,15 @@
+bnf
+
+
+number	::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0
+ident 	::= ['_']{'a-z'|'A-Z'}
+
+m_expr 	::= number | m_expr '*' number | m_expr '/' number
+a_expr 	::= m_expr | a_expr '+' m_expr | a_expr '-' m_expr
+
+var ::= ident | 
+
+statement ::= ';' |
+	var
+
+program ::= { statement }
