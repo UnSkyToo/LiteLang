@@ -106,6 +106,11 @@
             return SyntaxNodeType.String;
         }
 
+        public override Value Accept(IVisitor Visitor, Environment Env)
+        {
+            return Visitor.Visit(this, Env);
+        }
+
         public override string ToString()
         {
             return Token_.Code;

@@ -224,5 +224,10 @@ namespace LiteLang.Runtime
             }
             return Value.Nil;
         }
+
+        public Value Visit(SyntaxStringLiteralNode Node, Environment Env)
+        {
+            return Node.GetValue();
+        }
     }
 }

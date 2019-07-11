@@ -47,8 +47,9 @@ namespace LiteLang.Base
                 case ValueType.Numeric:
                     return Numeric.ToString();
                 case ValueType.String:
+                    return $"{StringTable.GetString((int)Numeric)}";
                 case ValueType.Ident:
-                    return "string";
+                    return "ident";
                 case ValueType.Function:
                     return $"<fn:{(int)Numeric}>";
                 default:

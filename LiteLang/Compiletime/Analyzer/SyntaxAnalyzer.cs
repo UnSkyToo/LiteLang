@@ -349,6 +349,7 @@ namespace LiteLang.Compiletime.Analyzer
                 var Arg = ParseExprNode();
                 if (Arg == null)
                 {
+                    ExitCode_ = new ExitUnexpectedSymbolCode(TokenStream_.Peek());
                     return null;
                 }
 

@@ -16,5 +16,6 @@ namespace LiteLang.Base
         Value Visit(SyntaxFunctionNode Node, Environment Env);
         Value Visit(SyntaxCallFunctionExpressionNode Node, Environment Env);
         Value Visit(SyntaxReturnStatementNode Node, Environment Env);
+        Value Visit(SyntaxStringLiteralNode Node, Environment Env);
     }
 }
