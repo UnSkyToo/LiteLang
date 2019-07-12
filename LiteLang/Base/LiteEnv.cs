@@ -3,28 +3,45 @@ using LiteLang.Base.Log;
 
 namespace LiteLang.Base
 {
-    public class Environment
+    public class LiteEnv
     {
-        private readonly Dictionary<string, Value> Variable_;
-        private Environment OuterEnv_;
+        private readonly Dictionary<string, LiteValue> Variable_;
+        private readonly Stack<LiteValue> Stack_;
+        private LiteEnv OuterEnv_;
 
-        public Environment()
+        public LiteEnv()
             : this(null)
         {
         }
 
-        public Environment(Environment OuterEnv)
+        public LiteEnv(LiteEnv OuterEnv)
         {
-            Variable_ = new Dictionary<string, Value>();
+            Variable_ = new Dictionary<string, LiteValue>();
+            Stack_ = new Stack<LiteValue>();
             OuterEnv_ = OuterEnv;
         }
 
-        public void SetOuterEnv(Environment OuterEnv)
+        public void Push(LiteValue Val)
+        {
+            Stack_.Push(Val);
+        }
+
+        public LiteValue Pop()
+        {
+            return Stack_.Pop();
+        }
+
+        public int StackCount()
+        {
+            return Stack_.Count;
+        }
+
+        public void SetOuterEnv(LiteEnv OuterEnv)
         {
             OuterEnv_ = OuterEnv;
         }
 
-        public Value Get(string Name)
+        public LiteValue Get(string Name)
         {
             if (Variable_.ContainsKey(Name))
             {
@@ -37,20 +54,20 @@ namespace LiteLang.Base
             }
 
             Logger.DError($"unknown var : {Name}");
-            return Value.Nil;
+            return LiteValue.Nil;
         }
 
-        public Value Get(Value Name)
+        public LiteValue Get(LiteValue Name)
         {
-            if (Name.Type == ValueType.Ident || Name.Type == ValueType.String)
+            if (Name.Type == LiteValueType.String)
             {
                 return Get(StringTable.GetString((int)Name.Numeric));
             }
             Logger.DError($"unknown var : {StringTable.GetString((int)Name.Numeric)}");
-            return Value.Nil;
+            return LiteValue.Nil;
         }
 
-        public void Set(string Name, Value Val)
+        public void Set(string Name, LiteValue Val)
         {
             var Env = Where(Name);
             if (Env == null)
@@ -61,9 +78,9 @@ namespace LiteLang.Base
             Env.SetSelf(Name, Val);
         }
 
-        public void Set(Value Name, Value Val)
+        public void Set(LiteValue Name, LiteValue Val)
         {
-            if (Name.Type == ValueType.Ident || Name.Type == ValueType.String)
+            if (Name.Type == LiteValueType.String)
             {
                 Set(StringTable.GetString((int)Name.Numeric), Val);
             }
@@ -73,7 +90,7 @@ namespace LiteLang.Base
             }
         }
 
-        public void SetSelf(string Name, Value Val)
+        public void SetSelf(string Name, LiteValue Val)
         {
             if (!Variable_.ContainsKey(Name))
             {
@@ -85,9 +102,9 @@ namespace LiteLang.Base
             }
         }
 
-        public void SetSelf(Value Name, Value Val)
+        public void SetSelf(LiteValue Name, LiteValue Val)
         {
-            if (Name.Type == ValueType.Ident || Name.Type == ValueType.String)
+            if (Name.Type == LiteValueType.String)
             {
                 SetSelf(StringTable.GetString((int)Name.Numeric), Val);
             }
@@ -97,7 +114,7 @@ namespace LiteLang.Base
             }
         }
 
-        public Environment Where(string Name)
+        public LiteEnv Where(string Name)
         {
             if (Variable_.ContainsKey(Name))
             {

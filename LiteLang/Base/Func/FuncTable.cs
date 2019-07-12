@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace LiteLang.Base
+namespace LiteLang.Base.Func
 {
     public static class FuncTable
     {
-        private static readonly List<Function> FuncTable_ = new List<Function>();
-        private static readonly Dictionary<Function, int> FuncHash_ = new Dictionary<Function, int>();
+        private static readonly List<FuncBase> FuncTable_ = new List<FuncBase>();
+        private static readonly Dictionary<FuncBase, int> FuncHash_ = new Dictionary<FuncBase, int>();
 
-        public static int AddFunc(Function Func)
+        public static int AddFunc(FuncBase Func)
         {
             if (FuncHash_.ContainsKey(Func))
             {
@@ -19,7 +19,12 @@ namespace LiteLang.Base
             return FuncTable_.Count - 1;
         }
 
-        public static Function GetFunc(int Index)
+        public static LiteValue AddFuncEx(FuncBase Func)
+        {
+            return new LiteValue(LiteValueType.Function, AddFunc(Func));
+        }
+
+        public static FuncBase GetFunc(int Index)
         {
             if (Index < 0 || Index >= FuncTable_.Count)
             {

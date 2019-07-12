@@ -12,7 +12,7 @@
             return SyntaxNodeType.Program;
         }
 
-        public override Value Accept(IVisitor Visitor, Environment Env)
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
         {
             return Visitor.Visit(this, Env);
         }
@@ -23,44 +23,36 @@
         }
     }
 
-    public class SyntaxFunctionNode : SyntaxCommandNode
-    {
-        private readonly string FuncName_;
 
-        public SyntaxFunctionNode(string FuncName, SyntaxParamListStatementNode ParamListNode, SyntaxBlockStatementNode BlockNode)
-            : base(ParamListNode, BlockNode)
+
+    public class SyntaxIdentifierNode : SyntaxTerminalNode
+    {
+        private readonly string Value_;
+
+        public SyntaxIdentifierNode(Token Tok)
+            : base(Tok)
         {
-            FuncName_ = FuncName;
+            Value_ = Tok.Code;
         }
 
         public override SyntaxNodeType GetType()
         {
-            return SyntaxNodeType.Function;
+            return SyntaxNodeType.Identifier;
         }
 
-        public override Value Accept(IVisitor Visitor, Environment Env)
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
         {
             return Visitor.Visit(this, Env);
         }
 
         public override string ToString()
         {
-            return $"fn({Children_[0]})[{Children_[1]}]";
+            return $"Ident[{Token_.Code}]";
         }
 
-        public string GetFuncName()
+        public string GetValue()
         {
-            return FuncName_;
-        }
-
-        public SyntaxNode GetParamList()
-        {
-            return Children_[0];
-        }
-
-        public SyntaxNode GetBlock()
-        {
-            return Children_[1];
+            return Value_;
         }
     }
 }

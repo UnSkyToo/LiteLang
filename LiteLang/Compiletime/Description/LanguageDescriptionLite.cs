@@ -7,7 +7,7 @@ namespace LiteLang.Compiletime.Description
         private readonly HashSet<string> KeywordList_ = new HashSet<string>
         {
             // Keyword
-            "for", "if", "else", "elseif", "while", "break", "continue", "for", "fn", "return",
+            "for", "if", "else", "while", "break", "continue", "for", "fn", "return", "class",
         };
 
         private readonly HashSet<char> DelimiterList_ = new HashSet<char>
@@ -17,18 +17,18 @@ namespace LiteLang.Compiletime.Description
 
         private readonly HashSet<char> OperatorList_ = new HashSet<char>
         {
-            '+', '-', '*', '/', '=', '%', '^', '&', '|', '~', '<', '>', '.', '#',
+            '+', '-', '*', '/', '=', '%', '^', '&', '|', '~', '<', '>',
         };
 
         private readonly HashSet<string> UnaryOperatorList_ = new HashSet<string>
         {
-            "~", "-", "#",
+            "~", "-",
         };
 
         private readonly HashSet<string> BinaryOperatorList_ = new HashSet<string>
         {
             "+", "-", "*", "/", "=", "%", "^", "&", "|", "~", "<", ">",
-            "<=", ">=", "&&", "||", "..", "~=", "==", "<<", ">>", "+=", "-=",
+            "<=", ">=", "&&", "||", "~=", "==", "<<", ">>", "+=", "-=",
         };
 
         /// <summary>

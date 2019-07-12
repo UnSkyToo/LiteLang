@@ -19,6 +19,11 @@ namespace LiteLang.Base
             return StringTable_.Count - 1;
         }
 
+        public static LiteValue AddStringEx(string Str)
+        {
+            return new LiteValue(LiteValueType.String, AddString(Str));
+        }
+
         public static string GetString(int Index)
         {
             if (Index < 0 || Index >= StringTable_.Count)

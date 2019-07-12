@@ -56,7 +56,7 @@
             return SyntaxNodeType.BinaryExpression;
         }
 
-        public override Value Accept(IVisitor Visitor, Environment Env)
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
         {
             return Visitor.Visit(this, Env);
         }
@@ -89,7 +89,7 @@
             return SyntaxNodeType.AssignmentExpression;
         }
 
-        public override Value Accept(IVisitor Visitor, Environment Env)
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
         {
             return Visitor.Visit(this, Env);
         }
@@ -122,14 +122,14 @@
             return SyntaxNodeType.CallFunctionExpression;
         }
 
-        public override Value Accept(IVisitor Visitor, Environment Env)
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
         {
             return Visitor.Visit(this, Env);
         }
 
         public override string ToString()
         {
-            return $"Call({Children_[1]})";
+            return $"Call {Children_[0]}({Children_[1]})";
         }
 
         public SyntaxNode GetFuncIdentNode()
@@ -138,6 +138,39 @@
         }
 
         public SyntaxNode GetArgumentListNode()
+        {
+            return Children_[1];
+        }
+    }
+
+    public class SyntaxDotClassExpressionNode : SyntaxExpressionNode
+    {
+        public SyntaxDotClassExpressionNode(SyntaxIdentifierNode ClassIdentNode, SyntaxIdentifierNode CallIdentNode)
+            : base(new Token(TokenType.Operator, "."), ClassIdentNode, CallIdentNode)
+        {
+        }
+
+        public override SyntaxNodeType GetType()
+        {
+            return SyntaxNodeType.DotClassExpression;
+        }
+
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
+        {
+            return Visitor.Visit(this, Env);
+        }
+
+        public override string ToString()
+        {
+            return $"Dot {Children_[0]}.{Children_[1]}";
+        }
+
+        public SyntaxNode GetClassIdentNode()
+        {
+            return Children_[0];
+        }
+
+        public SyntaxNode GetCallIdentNode()
         {
             return Children_[1];
         }

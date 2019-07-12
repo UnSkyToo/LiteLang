@@ -25,7 +25,7 @@
             return SyntaxNodeType.BlockStatement;
         }
 
-        public override Value Accept(IVisitor Visitor, Environment Env)
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
         {
             return Visitor.Visit(this, Env);
         }
@@ -48,7 +48,7 @@
             return SyntaxNodeType.IfStatement;
         }
 
-        public override Value Accept(IVisitor Visitor, Environment Env)
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
         {
             return Visitor.Visit(this, Env);
         }
@@ -86,7 +86,7 @@
             return SyntaxNodeType.WhileStatement;
         }
 
-        public override Value Accept(IVisitor Visitor, Environment Env)
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
         {
             return Visitor.Visit(this, Env);
         }
@@ -119,7 +119,7 @@
             return SyntaxNodeType.ReturnStatement;
         }
 
-        public override Value Accept(IVisitor Visitor, Environment Env)
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
         {
             return Visitor.Visit(this, Env);
         }
@@ -163,6 +163,29 @@
         public override string ToString()
         {
             return $"Args[{Children_.Count}]";
+        }
+    }
+
+    public class SyntaxClassBodyStatementNode : SyntaxStatementNode
+    {
+        public SyntaxClassBodyStatementNode(params SyntaxNode[] Children)
+            : base(Children)
+        {
+        }
+
+        public override SyntaxNodeType GetType()
+        {
+            return SyntaxNodeType.ClassBodyStatement;
+        }
+
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
+        {
+            return Visitor.Visit(this, Env);
+        }
+
+        public override string ToString()
+        {
+            return $"class body[{Children_.Count}]";
         }
     }
 }

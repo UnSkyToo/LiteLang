@@ -1,25 +1,19 @@
 ﻿using LiteLang.Base.Syntax;
 
-namespace LiteLang.Base
+namespace LiteLang.Base.Func
 {
-    public class Function
+    public class FuncLite : FuncBase
     {
-        private readonly string Name_;
-        private readonly Environment Env_;
+        private readonly LiteEnv Env_;
         private readonly SyntaxParamListStatementNode ParamList_;
         private readonly SyntaxBlockStatementNode Block_;
 
-        public Function(string Name, Environment Env, SyntaxParamListStatementNode ParamList, SyntaxBlockStatementNode Block)
+        public FuncLite(string Name, LiteEnv Env, SyntaxParamListStatementNode ParamList, SyntaxBlockStatementNode Block)
+            : base(Name)
         {
-            this.Name_ = Name;
             this.Env_ = Env;
             this.ParamList_ = ParamList;
             this.Block_ = Block;
-        }
-
-        public string GetName()
-        {
-            return Name_;
         }
 
         public SyntaxParamListStatementNode GetParamList()
@@ -32,9 +26,9 @@ namespace LiteLang.Base
             return Block_;
         }
 
-        public Environment MakeEnv()
+        public LiteEnv MakeEnv()
         {
-            return new Environment(Env_);
+            return new LiteEnv(Env_);
         }
     }
 }

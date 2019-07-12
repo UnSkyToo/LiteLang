@@ -4,18 +4,21 @@ namespace LiteLang.Base
 {
     public interface IVisitor
     {
-        Value Visit(SyntaxProgramNode Node, Environment Env);
-        Value Visit(SyntaxAssignmentExpressionNode Node, Environment Env);
-        Value Visit(SyntaxWhileStatementNode Node, Environment Env);
-        Value Visit(SyntaxIfStatementNode Node, Environment Env);
-        Value Visit(SyntaxBooleanLiteralNode Node, Environment Env);
-        Value Visit(SyntaxNumericLiteralNode Node, Environment Env);
-        Value Visit(SyntaxBinaryExpressionNode Node, Environment Env);
-        Value Visit(SyntaxBlockStatementNode Node, Environment Env);
-        Value Visit(SyntaxIdentifierNode Node, Environment Env);
-        Value Visit(SyntaxFunctionNode Node, Environment Env);
-        Value Visit(SyntaxCallFunctionExpressionNode Node, Environment Env);
-        Value Visit(SyntaxReturnStatementNode Node, Environment Env);
-        Value Visit(SyntaxStringLiteralNode Node, Environment Env);
+        LiteValue Visit(SyntaxProgramNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxAssignmentExpressionNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxWhileStatementNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxIfStatementNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxBooleanLiteralNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxNumericLiteralNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxBinaryExpressionNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxBlockStatementNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxIdentifierNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxFunctionNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxCallFunctionExpressionNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxReturnStatementNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxStringLiteralNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxClassNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxClassBodyStatementNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxDotClassExpressionNode Node, LiteEnv Env);
     }
 }

@@ -14,10 +14,11 @@ namespace LiteLang.Base.Syntax
         Numeric = 4,
         String = 5,
         Identifier = 6,
+        Function = 7,
+        Class = 8,
         // Declaration
-        VariableDeclarator = 10,
+        Declaration = 10,
         VariableDeclaration = 11,
-        FunctionDeclaration = 12,
         // Statement
         Statement = 100,
         IfStatement = 101,
@@ -30,20 +31,20 @@ namespace LiteLang.Base.Syntax
         ContinueStatement = 108,
         ParamListStatement = 109,
         ArgumentListStatement = 110,
+        ClassBodyStatement = 111,
         // Expression
         Expression = 200,
         UnaryExpression = 201,
         BinaryExpression = 203,
         AssignmentExpression = 207,
         CallFunctionExpression = 208,
-
-        Function,
+        DotClassExpression = 209,
     }
 
     public abstract class SyntaxNode
     {
         public new abstract SyntaxNodeType GetType();
-        public abstract Value Accept(IVisitor Visitor, Environment Env);
+        public abstract LiteValue Accept(IVisitor Visitor, LiteEnv Env);
     }
 
     public class SyntaxCommandNode : SyntaxNode
@@ -64,9 +65,9 @@ namespace LiteLang.Base.Syntax
             return SyntaxNodeType.CommandNode;
         }
 
-        public override Value Accept(IVisitor Visitor, Environment Env)
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
         {
-            return Value.Nil;
+            return LiteValue.Nil;
         }
 
         public List<SyntaxNode> GetChildren()
@@ -119,9 +120,9 @@ namespace LiteLang.Base.Syntax
             return SyntaxNodeType.Terminal;
         }
 
-        public override Value Accept(IVisitor Visitor, Environment Env)
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
         {
-            return Value.Nil;
+            return LiteValue.Nil;
         }
     }
 }
