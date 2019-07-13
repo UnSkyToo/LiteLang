@@ -20,5 +20,7 @@ namespace LiteLang.Base
         LiteValue Visit(SyntaxClassNode Node, LiteEnv Env);
         LiteValue Visit(SyntaxClassBodyStatementNode Node, LiteEnv Env);
         LiteValue Visit(SyntaxDotClassExpressionNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxElementsStatementNode Node, LiteEnv Env);
+        LiteValue Visit(SyntaxIndexElementsExpressionNode Node, LiteEnv Env);
     }
 }

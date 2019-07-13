@@ -14,6 +14,7 @@ namespace LiteLang.Base
         Function,
         Class,
         Object,
+        Elements,
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -65,6 +66,8 @@ namespace LiteLang.Base
                     return $"<class:{(int)Numeric}>";
                 case LiteValueType.Object:
                     return $"<object:{(int)Numeric}>";
+                case LiteValueType.Elements:
+                    return $"<elements:{(int)Numeric}>";
                 default:
                     return "unknown";
             }
@@ -105,7 +108,8 @@ namespace LiteLang.Base
                 case LiteValueType.Function:
                 case LiteValueType.Class:
                 case LiteValueType.Object:
-                    return Math.Abs(Numeric - Other.Numeric) <= Ep;
+                case LiteValueType.Elements:
+                    return (int)Numeric == (int)Other.Numeric;
             }
 
             return false;

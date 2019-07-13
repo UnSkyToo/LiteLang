@@ -175,4 +175,37 @@
             return Children_[1];
         }
     }
+
+    public class SyntaxIndexElementsExpressionNode : SyntaxExpressionNode
+    {
+        public SyntaxIndexElementsExpressionNode(SyntaxNode ElementIdentNode, SyntaxNode IndexNode)
+            : base(new Token(TokenType.Operator, "[]"), ElementIdentNode, IndexNode)
+        {
+        }
+
+        public override SyntaxNodeType GetType()
+        {
+            return SyntaxNodeType.IndexElementsExpression;
+        }
+
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
+        {
+            return Visitor.Visit(this, Env);
+        }
+
+        public override string ToString()
+        {
+            return $"Index {Children_[0]}[{Children_[1]}]";
+        }
+
+        public SyntaxNode GetElementIdentNode()
+        {
+            return Children_[0];
+        }
+
+        public SyntaxNode GetIndexNode()
+        {
+            return Children_[1];
+        }
+    }
 }

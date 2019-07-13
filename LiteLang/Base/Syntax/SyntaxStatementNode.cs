@@ -188,4 +188,27 @@
             return $"class body[{Children_.Count}]";
         }
     }
+
+    public class SyntaxElementsStatementNode : SyntaxStatementNode
+    {
+        public SyntaxElementsStatementNode(params SyntaxNode[] Children)
+            : base(Children)
+        {
+        }
+
+        public override SyntaxNodeType GetType()
+        {
+            return SyntaxNodeType.ElementsStatement;
+        }
+
+        public override LiteValue Accept(IVisitor Visitor, LiteEnv Env)
+        {
+            return Visitor.Visit(this, Env);
+        }
+
+        public override string ToString()
+        {
+            return $"Elements[{Children_.Count}]";
+        }
+    }
 }

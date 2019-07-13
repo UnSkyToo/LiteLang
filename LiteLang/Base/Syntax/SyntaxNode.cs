@@ -32,6 +32,7 @@ namespace LiteLang.Base.Syntax
         ParamListStatement = 109,
         ArgumentListStatement = 110,
         ClassBodyStatement = 111,
+        ElementsStatement = 112,
         // Expression
         Expression = 200,
         UnaryExpression = 201,
@@ -39,6 +40,7 @@ namespace LiteLang.Base.Syntax
         AssignmentExpression = 207,
         CallFunctionExpression = 208,
         DotClassExpression = 209,
+        IndexElementsExpression = 210,
     }
 
     public abstract class SyntaxNode

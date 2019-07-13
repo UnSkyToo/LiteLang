@@ -247,28 +247,38 @@ namespace LiteLang.Compiletime.Analyzer
                         {
                             case ".":
                                 TokenStream_.Take();
+
+                                if (Left.GetType() != SyntaxNodeType.Identifier)
+                                {
+                                    ExitCode_ = new ExitFailedCode(". must use for class ident");
+                                    return null;
+                                }
+
                                 if (!TokenStream_.TakeExpect(TokenType.Identifier, out Token CallIdent))
                                 {
                                     ExitCode_ = new ExitUnexpectedSymbolCode(CallIdent);
                                     return null;
                                 }
 
-                                if (Left.GetType() != SyntaxNodeType.Identifier)
-                                {
-                                    ExitCode_ = new ExitFailedCode(". must use class ident");
-                                    return null;
-                                }
-
                                 Left = new SyntaxDotClassExpressionNode(Left as SyntaxIdentifierNode, new SyntaxIdentifierNode(CallIdent));
                                 break;
                             case "(":
-                                var Args = ParseArgumentListNode();
-                                if (Args == null)
+                                var ArgsNode = ParseArgumentListNode();
+                                if (ArgsNode == null)
                                 {
                                     return null;
                                 }
 
-                                Left = new SyntaxCallFunctionExpressionNode(Left, Args);
+                                Left = new SyntaxCallFunctionExpressionNode(Left, ArgsNode);
+                                break;
+                            case "[":
+                                var IndexNode = ParseIndexNode();
+                                if (IndexNode == null)
+                                {
+                                    return null;
+                                }
+
+                                Left = new SyntaxIndexElementsExpressionNode(Left, IndexNode);
                                 break;
                             default:
                                 return Left;
@@ -282,7 +292,7 @@ namespace LiteLang.Compiletime.Analyzer
             return Left;
         }
 
-        // primary ::= ("fn" paramlist block | "-" primary | "(" expr ")" | Number | String | Boolean | nil | Identifier ) { args }
+        // primary ::= ("fn" paramlist block | "-" primary | elements | "(" expr ")" | Number | String | Boolean | nil | Identifier ) { args }
         private SyntaxNode ParsePrimaryNode()
         {
             var Tok = TokenStream_.Take();
@@ -317,6 +327,12 @@ namespace LiteLang.Compiletime.Analyzer
                             return null;
                         }
                         return Expr;
+                    }
+
+                    if (Tok.Code == "[")
+                    {
+                        TokenStream_.Back();
+                        return ParseElementsNode();
                     }
                     break;
                 case TokenType.Operator:
@@ -382,6 +398,56 @@ namespace LiteLang.Compiletime.Analyzer
                 }
 
                 if (Tok.Code == ")")
+                {
+                    return Node;
+                }
+                if (Tok.Code == ",")
+                {
+                    continue;
+                }
+
+                ExitCode_ = new ExitUnexpectedSymbolCode(Tok);
+            }
+
+            ExitCode_ = new ExitUnexpectedSymbolCode(Tok);
+            return null;
+        }
+
+        // elements ::= "[" [ expr { "," expr } ] "]"
+        private SyntaxElementsStatementNode ParseElementsNode()
+        {
+            if (!TokenStream_.TakeExpect(TokenType.Delimiter, "[", out Token Tok))
+            {
+                ExitCode_ = new ExitUnexpectedSymbolCode(Tok);
+                return null;
+            }
+
+            var Node = new SyntaxElementsStatementNode();
+
+            if (TokenStream_.PeekExpect(TokenType.Delimiter, "]"))
+            {
+                TokenStream_.Take();
+                return Node;
+            }
+
+            while (!TokenStream_.IsEnd())
+            {
+                var Arg = ParseExprNode();
+                if (Arg == null)
+                {
+                    ExitCode_ = new ExitUnexpectedSymbolCode(TokenStream_.Peek());
+                    return null;
+                }
+
+                Node.AddNode(Arg);
+
+                if (!TokenStream_.TakeExpect(TokenType.Delimiter, out Tok))
+                {
+                    ExitCode_ = new ExitUnexpectedSymbolCode(Tok);
+                    return null;
+                }
+
+                if (Tok.Code == "]")
                 {
                     return Node;
                 }
@@ -712,6 +778,30 @@ namespace LiteLang.Compiletime.Analyzer
             }
 
             return ParseSimpleNode();
+        }
+
+        // index ::= "[" expr "]"
+        private SyntaxNode ParseIndexNode()
+        {
+            if (!TokenStream_.TakeExpect(TokenType.Delimiter, "[", out Token Tok))
+            {
+                ExitCode_ = new ExitUnexpectedSymbolCode(Tok);
+                return null;
+            }
+
+            var Ident = ParseExprNode();
+            if (Ident == null)
+            {
+                return null;
+            }
+
+            if (!TokenStream_.TakeExpect(TokenType.Delimiter, "]", out Tok))
+            {
+                ExitCode_ = new ExitUnexpectedSymbolCode(Tok);
+                return null;
+            }
+
+            return Ident;
         }
     }
 }

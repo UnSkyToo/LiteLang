@@ -47,7 +47,7 @@
 
         public override string ToString()
         {
-            return $"Ident[{Token_.Code}]";
+            return $"Ident<{Token_.Code}>";
         }
 
         public string GetValue()

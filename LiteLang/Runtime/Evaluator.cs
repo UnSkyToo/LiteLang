@@ -139,6 +139,40 @@ namespace LiteLang.Runtime
                 return LiteObj.Write(Mem.GetValue(), ExpVal);
             }
 
+            if (LeftNode.GetType() == SyntaxNodeType.IndexElementsExpression)
+            {
+                var IdxNode = LeftNode as SyntaxIndexElementsExpressionNode;
+                var Val = IdxNode.GetElementIdentNode().Accept(this, Env);
+                if (Val.Type == LiteValueType.Elements)
+                {
+                    var EleObj = ElementsTable.GetElements((int)Val.Numeric);
+                    if (EleObj == null)
+                    {
+                        Logger.DError($"bad elements access : {Val}");
+                        return LiteValue.Error;
+                    }
+
+                    var Idx = IdxNode.GetIndexNode().Accept(this, Env);
+                    if (Idx.Type != LiteValueType.Numeric)
+                    {
+                        Logger.DError($"elements index must be number");
+                        return LiteValue.Error;
+                    }
+
+                    var ExpVal = Node.GetRight().Accept(this, Env);
+                    if (ExpVal == LiteValue.Error)
+                    {
+                        return ExpVal;
+                    }
+
+                    return EleObj.Set((int)Idx.Numeric, ExpVal);
+                }
+                else
+                {
+                    Logger.DError($"unknown elements type : {Val}");
+                }
+            }
+
             Logger.DError($"unexpected '=' near {Node.GetLeft()}");
             return LiteValue.Error;
         }
@@ -422,6 +456,46 @@ namespace LiteLang.Runtime
             else
             {
                 Logger.DError($"unknown class type : {Val}");
+            }
+
+            return LiteValue.Error;
+        }
+
+        public LiteValue Visit(SyntaxElementsStatementNode Node, LiteEnv Env)
+        {
+            var Eles = new LiteValue[Node.GetChildrenNum()];
+            for (var Index = 0; Index < Eles.Length; ++Index)
+            {
+                Eles[Index] = Node.GetChild(Index).Accept(this, Env);
+            }
+
+            return ElementsTable.AddElementsEx(new Elements(Eles));
+        }
+
+        public LiteValue Visit(SyntaxIndexElementsExpressionNode Node, LiteEnv Env)
+        {
+            var Val = Node.GetElementIdentNode().Accept(this, Env);
+            if (Val.Type == LiteValueType.Elements)
+            {
+                var EleObj = ElementsTable.GetElements((int)Val.Numeric);
+                if (EleObj == null)
+                {
+                    Logger.DError($"bad elements access : {Val}");
+                    return LiteValue.Error;
+                }
+
+                var Idx = Node.GetIndexNode().Accept(this, Env);
+                if (Idx.Type != LiteValueType.Numeric)
+                {
+                    Logger.DError($"elements index must be number");
+                    return LiteValue.Error;
+                }
+
+                return EleObj.Get((int)Idx.Numeric);
+            }
+            else
+            {
+                Logger.DError($"unknown elements type : {Val}");
             }
 
             return LiteValue.Error;
